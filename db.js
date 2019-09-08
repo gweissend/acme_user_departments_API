@@ -23,20 +23,35 @@ const Department = conn.define('department', {
     }
 })
 
+User.belongsTo(Department);
+Department.hasMany(User);
+
 const syncAndSeed = async() => {
     await conn.sync({ force: true })
 
+    const departments = [
+        { name: 'fishing' },
+        { name: 'hunting' }
+    ]
+
+    const [fishing, hunting] = await Promise.all(departments.map(dept => Department.create(dept)));
+
     const users = [
-        { name: 'Grey'},
-        { name: 'Zach' }
+        { name: 'Grey', departmentId: hunting.id },
+        { name: 'Zach', departmentId: fishing.id }
     ]
 
     const [grey, zach] = await Promise.all(users.map(user => User.create(user)));
     return {
+        departments: {
+            fishing,
+            hunting
+        },
         users: {
             grey,
             zach
-        }
+        },
+        
     }
 }
 
