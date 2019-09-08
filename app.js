@@ -3,12 +3,12 @@ const app = express();
 const db = require('./db');
 const {User} = db.models
 app.use(express.json())
+app.use(require('cors')());
 
 const { pluralize } = require('inflection')
 module.exports = app;
 
 Object.entries(db.models).forEach(([name, model])=> {
-    console.log(pluralize(name), typeof model)
     const baseRoute = `/api/${pluralize(name)}`
     const idRoute = `/api/${pluralize(name)}`
     app.get(baseRoute, (req, res, next) => {
@@ -23,14 +23,14 @@ Object.entries(db.models).forEach(([name, model])=> {
             .catch(next);
     })
     
-    app.delete('/api/users/:id', (req, res, next) => {
+    app.delete(`${baseRoute}/:id`, (req, res, next) => {
         model.findByPk(req.params.id)
             .then(name => name.destroy())
             .then(res.sendStatus(204))
             .catch(next);
     })
     
-    app.put('/api/users/:id', (req, res, next) => {
+    app.put(`${baseRoute}/:id`, (req, res, next) => {
         model.findByPk(req.params.id)
             .then(name => name.update(req.body))
             .then(updatedName => res.send(updatedName))

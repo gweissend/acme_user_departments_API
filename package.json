@@ -19,6 +19,7 @@
   "homepage": "https://github.com/gweissend/acme_user_departments_API#readme",
   "dependencies": {
     "chai": "^4.2.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "inflection": "^1.12.0",
     "mocha": "^6.2.0",

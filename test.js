@@ -60,4 +60,39 @@ describe('API', () => {
                 })
         })
     })
+    describe('GET /api/departments', ()=>{
+        it('returns the depts', ()=> {
+            return app.get('/api/departments')
+                .expect(200)
+                .then(response => {
+                    expect(response.body.length).to.equal(2)
+                })
+        })
+    })
+    describe('POST /api/departments', () => {
+        it('posts a dept', () => {
+            return app.post('/api/departments')
+                .send({ name: 'frisbee'})
+                .expect(201)
+                .then( response => {
+                    expect(response.body.name).to.equal('frisbee');
+                })
+        })
+    })
+    describe('DELETE /api/departments/:id', () => {
+        it('deletes a dept', () => {
+            return app.delete(`/api/departments/${seed.departments.hunting.id}`)
+                .expect(204)
+        })
+    })
+    describe('PUT /api/departments/:id', () => {
+        it('updates a dept', () => {
+            return app.put(`/api/departments/${seed.departments.hunting.id}`)
+                .send({ name: 'bowhunting'})
+                .expect(200)
+                .then( response => {
+                    expect(response.body.name).to.equal('bowhunting')
+                })
+        })
+    })
 })

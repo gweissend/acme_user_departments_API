@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize')
 const {STRING, UUID, UUIDV4} = Sequelize
-const dbURL = process.env.DATABASE_URL || 'postgres://localhost/acme_user_departments_API_db'
+const dbURL = process.env.DATABASE_URL || 'postgres://localhost/acme_user_departments_api_db'
 const conn = new Sequelize(dbURL, {logging: false})
+
 
 const idObj = {
     primaryKey: true,
@@ -13,6 +14,29 @@ const User = conn.define('user', {
     id: idObj,
     name: {
         type: STRING
+    },
+}, {
+    hooks: {
+      beforeSave: async function(user) {
+        if (user.departmentId) {
+          try {
+            const usersInDept = await User.findAll({
+              where: {
+                departmentId: user.departmentId
+              }
+            })
+            const error = new Error();
+            error.message = 'Max 5 users in a department';
+            if (usersInDept.length === 5) {
+              console.log(error.message);
+              throw error;
+            }
+          } catch(ex) {
+            console.log(ex);
+            throw ex;
+          }
+        }
+      } 
     }
 })
 
@@ -51,7 +75,6 @@ const syncAndSeed = async() => {
             grey,
             zach
         },
-        
     }
 }
 
