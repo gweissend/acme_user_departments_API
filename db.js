@@ -16,6 +16,13 @@ const User = conn.define('user', {
     }
 })
 
+const Department = conn.define('department', {
+    id: idObj,
+    name: {
+        type: STRING
+    }
+})
+
 const syncAndSeed = async() => {
     await conn.sync({ force: true })
 
@@ -36,7 +43,8 @@ const syncAndSeed = async() => {
 module.exports = {
     syncAndSeed,
     models: {
-        User
+        User,
+        Department
     }
 }
 // User model
