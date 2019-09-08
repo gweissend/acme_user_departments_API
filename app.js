@@ -4,23 +4,62 @@ const db = require('./db');
 const {User} = db.models
 app.use(express.json())
 
+const { pluralize } = require('inflection')
 module.exports = app;
 
-app.get('/api/users', (req, res, next) => {
-    User.findAll()
-        .then(user => res.send(user))
-        .catch(next)
+Object.entries(db.models).forEach(([name, model])=> {
+    console.log(pluralize(name), typeof model)
+    const baseRoute = `/api/${pluralize(name)}`
+    const idRoute = `/api/${pluralize(name)}`
+    app.get(baseRoute, (req, res, next) => {
+        model.findAll()
+            .then(name => res.send(name))
+            .catch(next)
+    })
+    
+    app.post(baseRoute, (req, res, next) => {
+        model.create(req.body)
+            .then(name => res.status(201).send(name))
+            .catch(next);
+    })
+    
+    app.delete('/api/users/:id', (req, res, next) => {
+        model.findByPk(req.params.id)
+            .then(name => name.destroy())
+            .then(res.sendStatus(204))
+            .catch(next);
+    })
+    
+    app.put('/api/users/:id', (req, res, next) => {
+        model.findByPk(req.params.id)
+            .then(name => name.update(req.body))
+            .then(updatedName => res.send(updatedName))
+            .catch(next)
+    })
 })
 
-app.post('/api/users', (req, res, next) => {
-    User.create(req.body)
-        .then(user => res.status(201).send(user))
-        .catch(next);
-})
+// app.get('/api/users', (req, res, next) => {
+//     User.findAll()
+//         .then(user => res.send(user))
+//         .catch(next)
+// })
 
-app.delete('/api/users/:id', (req, res, next) => {
-    User.findByPk(req.params.id)
-        .then(user => user.destroy())
-        .then(res.sendStatus(204))
-        .catch(next);
-})
+// app.post('/api/users', (req, res, next) => {
+//     User.create(req.body)
+//         .then(user => res.status(201).send(user))
+//         .catch(next);
+// })
+
+// app.delete('/api/users/:id', (req, res, next) => {
+//     User.findByPk(req.params.id)
+//         .then(user => user.destroy())
+//         .then(res.sendStatus(204))
+//         .catch(next);
+// })
+
+// app.put('/api/users/:id', (req, res, next) => {
+//     User.findByPk(req.params.id)
+//         .then(user => user.update(req.body))
+//         .then(updatedUser => res.send(updatedUser))
+//         .catch(next)
+// })

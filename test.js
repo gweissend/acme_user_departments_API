@@ -53,8 +53,11 @@ describe('API', () => {
         it('updates a user', () => {
             return app.put(`/api/users/${seed.users.zach.id}`)
                 .send({ name: 'Zaq'})
-                .expect(201)
-                .then()
+                .expect(200)
+                .then( response => {
+                    expect(response.body.name).to.equal('Zaq')
+                    expect(response.body.departmentId).to.equal(seed.departments.fishing.id)
+                })
         })
     })
 })
