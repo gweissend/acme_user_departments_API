@@ -1,13 +1,13 @@
 const { expect } = require('chai')
 const db = require('./db');
-// const {User, Department} = db.models
+const {User, Department} = db.models
 
-describe('Something', () => {
+describe('API tests', () => {
     let seed;
-    beforeEach(async () => seed = await db.syncAndSend());
-    describe("Tables", () => {
+    beforeEach(async () => seed = await db.syncAndSeed());
+    describe("DB functionality", () => {
         it('user table exist', () => {
-            expect(seed.models.user).true
+            return expect(seed.users.grey.name).to.equal('Grey');
         })
     })
 })

@@ -9,8 +9,36 @@ const idObj = {
     defaultValue: UUIDV4
 }
 
+const User = conn.define('user', {
+    id: idObj,
+    name: {
+        type: STRING
+    }
+})
 
+const syncAndSeed = async() => {
+    await conn.sync({ force: true })
 
+    const users = [
+        { name: 'Grey'},
+        { name: 'Zach' }
+    ]
+
+    const [grey, zach] = await Promise.all(users.map(user => User.create(user)));
+    return {
+        users: {
+            grey,
+            zach
+        }
+    }
+}
+
+module.exports = {
+    syncAndSeed,
+    models: {
+        User
+    }
+}
 // User model
 // unique, non-null, non-empty name
 // UUID for id

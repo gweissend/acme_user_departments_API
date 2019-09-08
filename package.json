@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test:dev": "DATABASE_URL= postgres://localhost/acme_user_departments_test_db mocha test.js --watch",
+    "test:dev": "DATABASE_URL=postgres://localhost/acme_user_departments_test_db mocha test.js --watch",
     "start": "node server.js"
   },
   "repository": {
